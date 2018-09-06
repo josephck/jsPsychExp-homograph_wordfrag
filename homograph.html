@@ -3,9 +3,9 @@
 
 <head>
   
-  <script src="../jspsych.js"></script>
-  <script src="../plugins/jspsych-html-keyboard-response.js"></script>
-  <link rel="stylesheet" href="../css/jspsych.css"></link>
+  <script src="./js/jspsych.js"></script>
+  <script src="./js/plugins/jspsych-html-keyboard-response.js"></script>
+  <link rel="stylesheet" href="./css/jspsych.css"></link>
   <style>
   .stimulus { font-size: 32px; }
   </style>
@@ -46,14 +46,15 @@
         fixation,
         {
             type: 'html-keyboard-response',
-            stimulus: function(){ return "<p class='stimulus'>"+jsPsych.timelineVariable('prime',true)+"</p <p class='stimulus'></p>"; },
+            stimulus: function(){ return "<p class='stimulus'><br/></p><p class='stimulus'>"+jsPsych.timelineVariable('prime',true)+"</p><p class='stimulus'><br/></p>" ; },
             choices: jsPsych.NO_KEYS,
             trial_duration: 750,
         },
         {
             type: 'html-keyboard-response',
-            stimulus: function(){ return "<p class='stimulus'>"+jsPsych.timelineVariable('prime',true)+"</p>" + 
-            "<p class='stimulus'>"+jsPsych.timelineVariable('stem',true)+"</p>"; },
+            stimulus: function(){ return "<p class='stimulus'><br/></p><p class='stimulus'>"+jsPsych.timelineVariable('prime',true)+"</p>";},
+            prompt:function(){return "<p class='stimulus'>"+jsPsych.timelineVariable('stem',true)+"</p>"; }, 
+            
             choices: [' '],
             trial_duration: 10000
         },
