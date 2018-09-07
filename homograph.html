@@ -14,7 +14,7 @@
 
 <script>
 //Data
-const block_para_lists = [{
+  const block_para_lists = [{
       instruction = "<p>blah blah blah</p>",
       stim_csv: "wordlist_p1.csv",
       debrief: "<p>blah blah blah</p>"
@@ -30,42 +30,16 @@ const block_para_lists = [{
       debrief: "<p>blah blah blah</p>"
     }
   ];
-//Promisify
-  function readAndBuildBlock(block_para) {
-    return new Promise(function(resolve, reject){
-      Papa.parse("./csv/p1.csv",{
-        download : true,
-        header : true,
-        complete: function(results){
-          p1_timeline = buildTimeline(results);
-          resolve(p1_timeline);
-        }
-      });
-    });
+
+  const fixation = {
+    type: 'html-keyboard-response',
+    stimulus: '<p class="stimulus">+</p>',
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 1000,
+    post_trial_gap: 500
   }
 
-  
-  const csv_path = "./csv/";
-  let promises = [];
-  
-  for (const block_para of block_para_lists) {
-    promises.push(readAndBuildBlock(block_para));
-  }
-
-  
-
-  Promise.all(promises).then(function(){
-    for(const block in arguments) {
-      timeline.push(block)
-      start_exp(timeline)
-    }
-
-  })
-  
-  
-  var timeline = [];
-
-  var instructions = {
+  const instruction = {
     type: 'html-keyboard-response', 
     //please refine the instruction below, use <p> and </p> to surround every line"
     stimulus: '<p>Blah Blah Blah</p>'+
@@ -73,20 +47,36 @@ const block_para_lists = [{
       '<p>When you are ready to begin, press Y or N.</p>',
     choices: ['y','n']
   }
-  timeline.push(instructions);
 
-  var stimuli = [
-    {prime: 'woman', valence: 'neutral', stem: 'gent_eman', correct_ans:'a'},
-    {prime: 'hey', valence: 'neutral', stem: 'hel_o', correct_ans:'l'}
-  
-  ];
-
-  var fixation = {
+  const debrief = {
     type: 'html-keyboard-response',
-    stimulus: '<p class="stimulus">+</p>',
-    choices: jsPsych.NO_KEYS,
-    trial_duration: 1000,
-    post_trial_gap: 500
+    stimulus: "<p>blah blah blah DONE</p>" ,
+    prompt: "<p>press any key to take a look on the data</p>" 
+  }
+
+    
+
+//Functions
+//Promisify
+  function readAndBuildBlock(block_para) {
+    return new Promise(function(resolve, reject){
+      Papa.parse(csv_path + block_para.stim_csv,{
+        download : true,
+        header : true,
+        complete: function(results){
+          p1_timeline = buildBlock(block_para, results);
+          resolve(p1_timeline);
+        }
+      });
+    });
+  }
+
+  function buildBlock(block_para, results) {
+    var timeline = [];
+    timeline.push(block_para.instruction);
+    timeline.push(trials(results));
+    timeline.push(block_para.debrief);
+    return timeline;
   }
 
   function trials(stimuli) {
@@ -133,13 +123,46 @@ const block_para_lists = [{
       }
   }
 
+//Enviornment constant and variables
+  const csv_path = "./csv/";
+  let promises = [];
+  var timeline = [];
+
+  
+  
+  //main()
+  for (const block_para of block_para_lists) {
+    promises.push(readAndBuildBlock(block_para));
+  }
+
+  
+
+  Promise.all(promises).then(function(){
+    timeline.push(instructions);
+    for(const block in arguments) {
+      timeline.push(block);
+    }
+    timeline.push(debrief);
+    start_exp(timeline)
+
+  })
+  
+
+ 
+
+  var stimuli = [
+    {prime: 'woman', valence: 'neutral', stem: 'gent_eman', correct_ans:'a'},
+    {prime: 'hey', valence: 'neutral', stem: 'hel_o', correct_ans:'l'}
+  
+  ];
+
+  
+
+  
+
   timeline.push(trials(stimuli));
 
-  var debrief = {
-    type: 'html-keyboard-response',
-    stimulus: "<p>blah blah blah DONE</p>" ,
-    prompt: "<p>press any key to take a look on the data</p>" 
-  }
+  
   timeline.push(debrief);
 
 
