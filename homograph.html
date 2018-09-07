@@ -78,20 +78,20 @@
       Papa.parse(csv_path + block_para.stim_csv,{
         download : true,
         header : true,
+	skipEmptyLines: true,
         complete: function(results){
-          timeline = buildBlock(block_para, results.data);
-          resolve(timeline);
+	  resolve(buildBlock(block_para, results.data));
         }
       });
     });
   }
 
   function buildBlock(block_para, results) {
-    var timeline = [];
-    timeline.push(buildInstruction(block_para.instruction));
-    timeline.push(trials(results));
-    timeline.push(buildDebrief(block_para.debrief));
-    return timeline;
+	  return {
+		  timeline:[buildInstruction(block_para.instruction),
+			   trials(results),
+			  buildDebrief(block_para.debrief)]
+	  } 
   }
 
   function trials(stimuli) {
@@ -154,7 +154,7 @@
 
   Promise.all(promises).then(function(){
     timeline.push(buildInstruction(instruction_text));
-    for(const block in arguments) {
+    for(const block of arguments[0]) {
       timeline.push(block);
     }
     timeline.push(buildDebrief(debrief_text));
@@ -163,7 +163,7 @@
       on_finish: function() {
           jsPsych.data.displayData();
       },
-      default_iti: 250
+      default_iti: 0
     });
 
   })
