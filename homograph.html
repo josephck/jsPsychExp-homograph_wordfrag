@@ -39,20 +39,11 @@
     post_trial_gap: 500
   }
 
-  const instruction = {
-    type: 'html-keyboard-response', 
-    //please refine the instruction below, use <p> and </p> to surround every line"
-    stimulus: '<p>Blah Blah Blah</p>'+
-      '<p>Blah Blah Blah Blah</p>'+
-      '<p>When you are ready to begin, press Y or N.</p>',
-    choices: ['y','n']
-  }
+  const instruction_text = '<p>Blah Blah Blah</p>'+
+      '<p>Blah Blah Blah Blah</p>';
+  
 
-  const debrief = {
-    type: 'html-keyboard-response',
-    stimulus: "<p>blah blah blah DONE</p>" ,
-    prompt: "<p>press any key to take a look on the data</p>" 
-  }
+  const debrief_text ="<p>blah blah blah DONE</p>";
 
 //for testing purpose only to be deleted
   const test_stimuli = [
@@ -63,6 +54,24 @@
 
 
 //Functions
+
+  function buildInstruction(text) {
+    return  {
+      type: 'html-keyboard-response', 
+      //please refine the instruction below, use <p> and </p> to surround every line"
+      stimulus: text +
+        '<p>When you are ready to begin, press Y or N.</p>',
+      choices: ['y','n']
+    }
+  }
+
+  function buildDebrief(text) {
+    return {
+      type: 'html-keyboard-response',
+      stimulus: "<p>blah blah blah DONE</p>" ,
+      prompt: "<p>press any key to take a look on the data</p>" 
+    }
+  }
 //Promisify
   function readAndBuildBlock(block_para) {
     return new Promise(function(resolve, reject){
@@ -79,9 +88,9 @@
 
   function buildBlock(block_para, results) {
     var timeline = [];
-    timeline.push(block_para.instruction);
+    timeline.push(buildInstruction(block_para.instruction));
     timeline.push(trials(results));
-    timeline.push(block_para.debrief);
+    timeline.push(buildDebrief(block_para.debrief));
     return timeline;
   }
 
@@ -144,11 +153,11 @@
   
 
   Promise.all(promises).then(function(){
-    timeline.push(instruction);
+    timeline.push(buildInstruction(instruction_text));
     for(const block in arguments) {
       timeline.push(block);
     }
-    timeline.push(debrief);
+    timeline.push(buildDebrief(debrief_text));
     jsPsych.init({
       timeline: timeline,
       on_finish: function() {
