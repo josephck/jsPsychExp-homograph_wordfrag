@@ -70,7 +70,7 @@
         download : true,
         header : true,
         complete: function(results){
-          timeline = buildBlock(block_para, results);
+          timeline = buildBlock(block_para, results.data);
           resolve(timeline);
         }
       });
@@ -144,7 +144,7 @@
   
 
   Promise.all(promises).then(function(){
-    timeline.push(instructions);
+    timeline.push(instruction);
     for(const block in arguments) {
       timeline.push(block);
     }
