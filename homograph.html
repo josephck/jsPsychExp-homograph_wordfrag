@@ -54,7 +54,13 @@
     prompt: "<p>press any key to take a look on the data</p>" 
   }
 
-    
+//for testing purpose only to be deleted
+  const test_stimuli = [
+    {prime: 'woman', valence: 'neutral', stem: 'gent_eman', correct_ans:'a'},
+    {prime: 'hey', valence: 'neutral', stem: 'hel_o', correct_ans:'l'}
+  
+  ];
+
 
 //Functions
 //Promisify
@@ -64,8 +70,8 @@
         download : true,
         header : true,
         complete: function(results){
-          p1_timeline = buildBlock(block_para, results);
-          resolve(p1_timeline);
+          timeline = buildBlock(block_para, results);
+          resolve(timeline);
         }
       });
     });
@@ -143,36 +149,16 @@
       timeline.push(block);
     }
     timeline.push(debrief);
-    start_exp(timeline)
+    jsPsych.init({
+      timeline: timeline,
+      on_finish: function() {
+          jsPsych.data.displayData();
+      },
+      default_iti: 250
+    });
 
   })
-  
 
- 
-
-  var stimuli = [
-    {prime: 'woman', valence: 'neutral', stem: 'gent_eman', correct_ans:'a'},
-    {prime: 'hey', valence: 'neutral', stem: 'hel_o', correct_ans:'l'}
-  
-  ];
-
-  
-
-  
-
-  timeline.push(trials(stimuli));
-
-  
-  timeline.push(debrief);
-
-
-  jsPsych.init({
-    timeline: timeline,
-    on_finish: function() {
-      jsPsych.data.displayData();
-    },
-    default_iti: 250
-  });
   
 </script>
 
