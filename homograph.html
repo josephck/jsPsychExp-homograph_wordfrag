@@ -5,6 +5,7 @@
   
   <script src="./js/jspsych.js"></script>
   <script src="./js/plugins/jspsych-html-keyboard-response.js"></script>
+  <script src="./js/papaparse.min.js"></script>
   <link rel="stylesheet" href="./css/jspsych.css"></link>
   <style>
   .stimulus { font-size: 32px; }
@@ -12,6 +13,56 @@
 </head>
 
 <script>
+//Data
+const block_para_lists = [{
+      instruction = "<p>blah blah blah</p>",
+      stim_csv: "wordlist_p1.csv",
+      debrief: "<p>blah blah blah</p>"
+    },
+    {
+      instruction = "<p>blah blah blah</p>",
+      stim_csv: "wordlist_p2.csv",
+      debrief: "<p>blah blah blah</p>"
+    },
+    {
+      instruction = "<p>blah blah blah</p>",
+      stim_csv: "wordlist_exp.csv",
+      debrief: "<p>blah blah blah</p>"
+    }
+  ];
+//Promisify
+  function readAndBuildBlock(block_para) {
+    return new Promise(function(resolve, reject){
+      Papa.parse("./csv/p1.csv",{
+        download : true,
+        header : true,
+        complete: function(results){
+          p1_timeline = buildTimeline(results);
+          resolve(p1_timeline);
+        }
+      });
+    });
+  }
+
+  
+  const csv_path = "./csv/";
+  let promises = [];
+  
+  for (const block_para of block_para_lists) {
+    promises.push(readAndBuildBlock(block_para));
+  }
+
+  
+
+  Promise.all(promises).then(function(){
+    for(const block in arguments) {
+      timeline.push(block)
+      start_exp(timeline)
+    }
+
+  })
+  
+  
   var timeline = [];
 
   var instructions = {
