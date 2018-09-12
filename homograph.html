@@ -30,7 +30,29 @@
       instruction: "<p>blah blah blah</p>",
       stim_csv: "wordlist_exp.csv",
       debrief: "<p>blah blah blah</p>",
-      feedback:false
+      feedback:false,
+      split: function(stim_list){
+        var n = 4;
+        var valence_type = [...new Set(stim_list.map(stim => stim.valence))];  //got all valence types
+        var block_size = stim_list.length / n; 
+        if (!Number.isInteger(block_size)) {
+          alert('The no. of stimuli is not divisible by the block no. required. Some stimuli will not be used.');
+          block_size = Math.floor(block_size);
+        }
+        var n_stim_per_valence_type = stim_list.length / valence_type.length;
+        var sorted_list = {}
+        var block = []
+
+        valence_type.forEach(w => sorted_list[w] = jsPsych.randomization.shuffle(
+          stim_list.filter(stim=>stim.valence==w)));
+        for (i = 0;i<n;i++) {
+          valence_type.forEach(w=>block.push(sorted_list[w].slice(i*n,i*n+n)))
+          block[i] = jsPsych.randomization.shuffle(block[i])
+        }
+        
+        return block;
+
+      }
     }
   ];
 
@@ -90,11 +112,24 @@
   }
 
   function buildBlock(block_para, results) {
-	  return {
-		  timeline:[buildInstruction(block_para.instruction),
+    function buildSimpleBlock(block_para,reulsts) {
+      return {timeline:[buildInstruction(block_para.instruction),
 			   trials(results,block_para.feedback),
-			  buildDebrief(block_para.debrief)]
-	  } 
+        buildDebrief(block_para.debrief)]
+        }
+    }
+	  var block;
+      if (typeof block_para.split === "undefined") {
+        return buildSimpleBlock(block_para,results);
+      } else {
+        block_list = block_para.split(results);
+        var timeline = [];
+        block_list.forEach(function(w){
+          timeline.push(buildSimpleBlock(block_para,w))
+        })
+        return timeline;
+      }
+	  
   }
 
   function trials(stimuli, feedback  = false) {
