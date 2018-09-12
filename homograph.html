@@ -17,17 +17,20 @@
   const block_para_lists = [{
       instruction: "<p>blah blah blah</p>",
       stim_csv: "wordlist_p1.csv",
-      debrief: "<p>blah blah blah</p>"
+      debrief: "<p>blah blah blah</p>",
+      feedback:true
     },
     {
       instruction: "<p>blah blah blah</p>",
       stim_csv: "wordlist_p2.csv",
-      debrief: "<p>blah blah blah</p>"
+      debrief: "<p>blah blah blah</p>",
+      feedback:true
     },
     {
       instruction: "<p>blah blah blah</p>",
       stim_csv: "wordlist_exp.csv",
-      debrief: "<p>blah blah blah</p>"
+      debrief: "<p>blah blah blah</p>",
+      feedback:false
     }
   ];
 
@@ -94,7 +97,7 @@
 	  } 
   }
 
-  function trials(stimuli) {
+  function trials(stimuli, feedback  = false) {
       return {
         timeline_variables: stimuli,
         randomize_order: true,
@@ -133,7 +136,11 @@
                   data.correct = false;
               }
           }
-        }
+        },(!feedback?{}:{
+          type: 'html-keyboard-response',
+            stimulus: function(){ return "<p class='stimulus'>${(data.correct?'Correct':'Wrong')}</p>"; },
+            trial_duration: 1000
+        })
         ]
       }
   }
