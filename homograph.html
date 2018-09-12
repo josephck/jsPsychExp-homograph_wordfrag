@@ -98,7 +98,7 @@
   }
 
   function trials(stimuli, feedback  = false) {
-      return {
+      result = {
         timeline_variables: stimuli,
         randomize_order: true,
         timeline: [
@@ -136,13 +136,18 @@
                   data.correct = false;
               }
           }
-        },(!feedback?{}:{
+        }
+        ]
+      }
+      if (feedback) {
+        result.timeline.push({
+          
           type: 'html-keyboard-response',
             stimulus: function(){ return "<p class='stimulus'>${(data.correct?'Correct':'Wrong')}</p>"; },
             trial_duration: 1000
         })
-        ]
       }
+      return result;
   }
 
 //Enviornment constant and variables
