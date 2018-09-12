@@ -92,7 +92,7 @@
   function buildBlock(block_para, results) {
 	  return {
 		  timeline:[buildInstruction(block_para.instruction),
-			   trials(results),
+			   trials(results,block_para.feedback),
 			  buildDebrief(block_para.debrief)]
 	  } 
   }
@@ -143,7 +143,7 @@
         result.timeline.push({
           
           type: 'html-keyboard-response',
-            stimulus: function(){ return "<p class='stimulus'>${(data.correct?'Correct':'Wrong')}</p>"; },
+            stimulus: function(){ return `<p class='stimulus'>${(jsPsych.data.getLastTrialData().values()[0].correct?'Correct':'Wrong')}</p>`; },
             trial_duration: 1000
         })
       }
