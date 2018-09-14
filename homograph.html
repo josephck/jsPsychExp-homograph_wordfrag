@@ -39,14 +39,21 @@
           alert('The no. of stimuli is not divisible by the block no. required. Some stimuli will not be used.');
           block_size = Math.floor(block_size);
         }
-        var n_stim_per_valence_type = stim_list.length / valence_type.length;
-        var sorted_list = {}
-        var block_list = []
+	      var n_stim_per_valence = {};
+        var sorted_list = {};
+        var block_list = [];
+	     
 
-        valence_type.forEach(w => sorted_list[w] = jsPsych.randomization.shuffle(
-          stim_list.filter(stim=>stim.valence==w)));
+	valence_type.forEach(function(w) { 
+		sorted_list[w] = jsPsych.randomization.shuffle(
+		      stim_list.filter(stim=>stim.valence==w));
+		n_stim_per_valence[w] = sorted_list[w].length;
+	      });
+
         for (i = 0;i<n;i++) {
-          valence_type.forEach(w=>block.push(sorted_list[w].slice(i*n,i*n+n)));
+	  let block = [];
+          valence_type.forEach(w=>block.push(...sorted_list[w].slice(i*n_stim_per_valence[w]/n,
+		  i*n_stim_per_valence[w]/n + n_stim_per_valence[w]/n )));
           block_list.push(jsPsych.randomization.shuffle(block))
         }
         
@@ -112,7 +119,7 @@
   }
 
   function buildBlock(block_para, results) {
-    function buildSimpleBlock(block_para,reulsts) {
+    function buildSimpleBlock(block_para,results) {
       return {timeline:[buildInstruction(block_para.instruction),
 			   trials(results,block_para.feedback),
         buildDebrief(block_para.debrief)]
@@ -127,7 +134,7 @@
         block_list.forEach(function(w){
           timeline.push(buildSimpleBlock(block_para,w))
         })
-        return timeline;
+	return {'timeline':timeline} ;
       }
 	  
   }
