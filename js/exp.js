@@ -1,6 +1,6 @@
 //Data
 const block_para_lists = [{
-    instruction: "<p>blah blah blah</p>",
+    instruction: "<p>Practice Instruction blah blah blah</p>",
     stim_csv: "wordlist_p1.csv",
     debrief: "<p>blah blah blah</p>",
     feedback:true
