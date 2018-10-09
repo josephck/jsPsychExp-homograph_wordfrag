@@ -1,15 +1,15 @@
 //Data
 const block_para_lists = [{
-    instruction: "<p>Practice Instruction blah blah blah</p>",
+    instruction: "<p>Each puzzle will begin with a cross at the center of the screen for you to focus on. After this, a cue word will appear, followed by the word puzzle. +Use the cue word to figure out what the word is, as quickly and accurately as possible, and press the space bar as soon as you have solved it. You will then be prompted to key in the missing letter of the word on your keyboard. +Please make sure to only press the space bar when you have solved the word! +After you have read and understood these instructions, please press [spacebar (to be changed)] to begin some practice trials.</p>",
     stim_csv: "wordlist_p1.csv",
-    debrief: "<p>blah blah blah</p>",
+    debrief: "<p>Prac1 debrief?</p>",
     feedback:true
   },
   {
-    instruction: "<p>blah blah blah</p>",
+    instruction: "<p>Hopefully you're getting the hang of this now! +Now, you will be given a few more practice trials but without feedback, to help you try and get used to the speed of the real task. +Please press [key] when you are ready to continue. </p>",
     stim_csv: "wordlist_p2.csv",
-    debrief: "<p>blah blah blah</p>",
-    feedback:true
+    debrief: "<p>Well done! You should now be ready to do the real task. Whenever you are ready, you can press [key] to begin.</p>",
+    feedback:false
   },
   {
     instruction: "<p>blah blah blah</p>",
@@ -54,11 +54,11 @@ const fixation = {
   post_trial_gap: 500
 }
 
-const instruction_text = '<p>Blah Blah Blah</p>'+
+const instruction_text = '<p>In this task, you will be required to solve some "word puzzles", which are basically words with a single letter missing. +For each puzzle, you will be given a cue word to help you solve it. +Please press [spacebar, to be changed] to receive further instructions on how to respond.</p>'+
     '<p>Blah Blah Blah Blah</p>';
 
 
-const debrief_text ="<p>blah blah blah DONE</p>";
+const debrief_text ="<p>You have now come to the end of this task! Well done! +When you are ready to continue, [further instructions to follow]</p>";
 
 //for testing purpose only to be deleted
 const test_stimuli = [
